@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold mb-4">Bienvenido a Mi Universidad</h1>
+    <p class="text-xl mb-8">Por favor, selecciona tu tipo de usuario para iniciar sesión.</p>
+    <div class="space-x-4">
+        <a href="{% url 'login' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Login Estudiante
+        </a>
+        <a href="{% url 'login_profesor' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            Login Profesor
+        </a>
+    </div>
+</div>
+{% endblock %}

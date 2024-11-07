@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Universidad{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-white text-2xl font-bold">Mi Universidad</a>
+            <div>
+                <a href="{% url 'login' %}" class="text-white hover:text-blue-200 mr-4">Login Estudiante</a>
+                <a href="{% url 'login_profesor' %}" class="text-white hover:text-blue-200">Login Profesor</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 px-4">
+        {% block content %}
+        <div class="text-center">
+            <h1 class="text-4xl font-bold mb-4">Bienvenido a Mi Universidad</h1>
+            <p class="text-xl">Por favor, selecciona tu tipo de usuario para iniciar sesión.</p>
+        </div>
+        {% endblock %}
+    </main>
+
+    <footer class="bg-blue-600 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Mi Universidad. Todos los derechos reservados. ;p</p>
+        </div>
+    </footer>
+</body>
+</html>
