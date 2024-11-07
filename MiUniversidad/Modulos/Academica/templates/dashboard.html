@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Panel Del Estudiante</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script>
+        function showTab(tabName, title) {
+            var tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(function (tab) {
+                tab.style.display = 'none';
+            });
+            document.getElementById(tabName).style.display = 'block';
+
+            // Cambiar el título según la pestaña seleccionada
+            document.getElementById('mainTitle').innerText = title;
+
+            // Actualizar la clase activa en la barra lateral
+            var sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(function (item) {
+                item.classList.remove('bg-blue-500', 'text-white');
+                item.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+            event.currentTarget.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            event.currentTarget.classList.add('bg-blue-500', 'text-white');
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div class="flex items-center py-4">
+                        <span class="font-semibold text-gray-500 text-lg">Universidad</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'logout' %}"
+                        class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded transition duration-300">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex">
+        <div class="w-64 bg-white h-screen shadow-lg">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold mb-4">Panel del Estudiante</h2>
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" onclick="showTab('infoEstudiante', 'Información del Estudiante')"
+                            class="sidebar-item block p-2 rounded bg-blue-500 text-white">
+                            Información del Estudiante
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" onclick="showTab('misCursos', 'Mis Cursos Matriculados')"
+                            class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Mis Cursos Matriculados
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" onclick="showTab('matricularCurso', 'Matricular Nuevo Curso')"
+                            class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Matricular Nuevo Curso
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" onclick="showTab('miPensum', 'Mi Pensum')"
+                            class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Mi Pensum
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex-1 p-10">
+            <h2 class="text-2xl font-bold mb-6" id="mainTitle">Información del Estudiante</h2>
+
+            <div id="infoEstudiante" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4">Información del Estudiante</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-600">Nombre Completo:</p>
+                            <p class="font-semibold">{{ estudiante.nombreCompleto }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Cédula:</p>
+                            <p class="font-semibold">{{ estudiante.cc }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Carrera:</p>
+                            <p class="font-semibold">{{ estudiante.carrera.nombre }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Estado:</p>
+                            <p class="font-semibold">{% if estudiante.vigencia %}Vigente{% else %}De Baja{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- En dashboard.html, dentro de la sección "misCursos" -->
+            <div id="misCursos" class="tab-content" style="display:none;">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Código</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nombre</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                N1</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                N2</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                N3</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Examen Final</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nota Final</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for matricula in cursos_matriculados %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.curso.codigo }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.curso.nombre }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N1|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N2|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N3|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.examen_final|default_if_none:"-" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if matricula.N1 and matricula.N2 and matricula.N3 and matricula.examen_final %}
+                                {{ matricula.calcular_nota_final|floatformat:2 }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <form action="{% url 'cancelar_curso' %}" method="post" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="matricula_id" value="{{ matricula.id }}">
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                                        onclick="return confirm('¿Estás seguro de que deseas cancelar este curso?')">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="matricularCurso" class="tab-content" style="display:none;">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4">Matricular Nuevo Curso</h3>
+                    {% if cursos_disponibles %}
+                    <form action="{% url 'matricular_curso' %}" method="post">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="curso" class="text-gray-600">Curso:</label>
+                                <select id="curso" name="curso"
+                                    class="block w-full mt-1 rounded-md border-gray-300 shadow-sm">
+                                    {% for curso in cursos_disponibles %}
+                                    <option value="{{ curso.codigo }}">
+                                        {{ curso.nombre }} ({{ curso.codigo }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                            Matricular
+                        </button>
+                    </form>
+                    {% else %}
+                    <p class="text-gray-600">No hay cursos disponibles para matricular en este momento.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div id="miPensum" class="tab-content" style="display:none;">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4">Mi Pensum</h3>
+                    {% for semestre, cursos in pensum_data.items %}
+                    <h4 class="text-lg font-bold mb-4">Semestre {{ semestre }}</h4>
+                    <ul>
+                        {% for curso in cursos %}
+                        <li class="mb-2">
+                            <span class="text-gray-600">{{ curso.curso.codigo }} - {{ curso.curso.nombre }}</span>
+                            <span
+                                class="text-sm {% if curso.estado == 'AP' %}text-green-500{% elif curso.estado == 'EC' %}text-blue-500{% else %}text-gray-500{% endif %}">
+                                ({{ curso.estado_display }})
+                            </span>
+                            {% if curso.prerequisitos %}
+                            <ul class="ml-4 text-sm">
+                                <li class="text-gray-500">Requisitos:</li>
+                                {% for pre in curso.prerequisitos %}
+                                <li class="{% if pre.cumplido %}text-green-500{% else %}text-red-500{% endif %}">
+                                    {{ pre.curso.codigo }} - {{ pre.curso.nombre }}
+                                    {% if pre.cumplido %}(Cumplido){% else %}(Pendiente){% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
