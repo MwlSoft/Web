@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content %}
+<div class="module">
+    {% for carrera, semestres in pensum_data.items %}
+        <h2>{{ carrera.nombre }}</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+            {% for semestre, cursos in semestres.items %}
+                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; width: 200px;">
+                    <h3>Semestre {{ semestre }}</h3>
+                    <ul>
+                        {% for curso in cursos %}
+                            <li>{{ curso.nombre }} ({{ curso.codigo }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{{ block.super }}
+{% endblock %}
