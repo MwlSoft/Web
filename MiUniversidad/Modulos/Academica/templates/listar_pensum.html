@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Pensum</title>
+</head>
+<body>
+    <h1>Lista de Pensum</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Carrera</th>
+                <th>Materia</th>
+                <th>Semestre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pensum in pensums %}
+            <tr>
+                <td>{{ pensum.carrera.nombre }}</td>
+                <td>{{ pensum.curso.nombre }}</td>
+                <td>{{ pensum.semestre }}</td>
+            </tr>
+             {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'agregar_pensum' %}">Agregar Materia al Pensum</a>
+</body>
+</html>

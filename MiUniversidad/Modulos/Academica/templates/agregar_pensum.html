@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Pensum</title>
+</head>
+<body>
+    <h1>Agregar Materia al Pensum</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'pensum_listar' %}">Volver a la lista</a>
+</body>
+</html>
