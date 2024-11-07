@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Estudiantes - {{ curso.nombre }}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div class="flex items-center py-4">
+                        <span class="font-semibold text-gray-500 text-lg">Universidad</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'logout_profesor' %}" 
+                       class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded transition duration-300">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-10">
+        <h1 class="text-2xl font-bold mb-6">Estudiantes en {{ curso.nombre }}</h1>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <ul class="space-y-2">
+                {% for matricula in matriculas %}
+                    <li class="flex justify-between items-center">
+                        <span>{{ matricula.estudiante.nombreCompleto }}</span>
+                        <a href="{% url 'asignar_calificaciones' matricula.id %}" class="text-blue-500 hover:text-blue-600">Asignar Calificaciones</a>
+                    </li>
+                {% empty %}
+                    <li>No hay estudiantes en este curso.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <a href="{% url 'dashboard_profesor' %}" class="mt-4 inline-block text-blue-500 hover:text-blue-600">Volver al Dashboard</a>
+    </div>
+</body>
+</html>
