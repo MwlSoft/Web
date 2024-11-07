@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asignar Calificaciones</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div class="flex items-center py-4">
+                        <span class="font-semibold text-gray-500 text-lg">Universidad</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'logout_profesor' %}" 
+                       class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded transition duration-300">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-10">
+        <h1 class="text-2xl font-bold mb-6">Asignar Calificaciones a {{ matricula.estudiante.nombreCompleto }}</h1>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="N1" class="block text-sm font-medium text-gray-700">Nota 1:</label>
+                    <input type="number" name="N1" step="0.01" min="0" max="5" value="{{ matricula.N1 }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+                <div>
+                    <label for="N2" class="block text-sm font-medium text-gray-700">Nota 2:</label>
+                    <input type="number" name="N2" step="0.01" min="0" max="5" value="{{ matricula.N2 }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+                <div>
+                    <label for="N3" class="block text-sm font-medium text-gray-700">Nota 3:</label>
+                    <input type="number" name="N3" step="0.01" min="0" max="5" value="{{ matricula.N3 }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+                <div>
+                    <label for="examen_final" class="block text-sm font-medium text-gray-700">Examen Final:</label>
+                    <input type="number" name="examen_final" step="0.01" min="0" max="5" value="{{ matricula.examen_final }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Guardar Calificación</button>
+            </form>
+        </div>
+        <a href="{% url 'lista_estudiantes_curso' matricula.curso.codigo %}" class="mt-4 inline-block text-blue-500 hover:text-blue-600">Volver a la lista de estudiantes</a>
+    </div>
+</body>
+</html>
