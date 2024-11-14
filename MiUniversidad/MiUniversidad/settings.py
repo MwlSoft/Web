@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-
+LOGIN_URL = '/login/'  # Cambia esto a la URL de tu página de inicio de sesión
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 86400  # 24 horas en segundos
+SESSION_COOKIE_AGE = 1209600  # 2 semanas, por defecto
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Mantener la sesión activa incluso después de cerrar el navegador
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -74,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-
+ASGI_APPLICATION = 'MiUniversidad.asgi.application'
 WSGI_APPLICATION = 'MiUniversidad.wsgi.application'
 
 

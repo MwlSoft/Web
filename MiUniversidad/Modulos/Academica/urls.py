@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import agregar_pensum, listar_pensum
+from .views import agregar_pensum, listar_pensum, chat_view
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -18,4 +18,7 @@ urlpatterns = [
     path('profesor/dashboard/', views.dashboard_profesor, name='dashboard_profesor'),
     path('profesor/curso/<str:curso_codigo>/estudiantes/', views.lista_estudiantes_curso, name='lista_estudiantes_curso'),
     path('profesor/calificacion/<int:matricula_id>/', views.asignar_calificaciones, name='asignar_calificaciones'),
-]
+
+    path('chat/<int:receiver_id>/', views.chat_view, name='chat'),
+    path('crear_chat/', views.crear_chat, name='crear_chat'),
+]   

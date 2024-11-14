@@ -75,6 +75,17 @@
                             Mi Pensum
                         </a>
                     </li>
+                    <li class="mb-2">
+                        <a href="#" onclick="showTab('historialAcademico', 'Historial Académico')"
+                            class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Historial Académico
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'crear_chat' %}" class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Crear un nuevo chat
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -106,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- En dashboard.html, dentro de la sección "misCursos" -->
             <div id="misCursos" class="tab-content" style="display:none;">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -137,8 +147,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N1|default_if_none:"-" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N2|default_if_none:"-" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ matricula.N3|default_if_none:"-" }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.examen_final|default_if_none:"-" }}
-                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ matricula.examen_final|default_if_none:"-" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {% if matricula.N1 and matricula.N2 and matricula.N3 and matricula.examen_final %}
                                 {{ matricula.calcular_nota_final|floatformat:2 }}
@@ -220,6 +229,19 @@
                         </li>
                         {% endfor %}
                     </ul>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="historialAcademico" class="tab-content" style="display:none;">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4">Historial Académico</h3>
+                    {% for matricula in cursos_aprobados %}
+                    <div class="mb-4">
+                        <span class="text-gray-600">{{ matricula.curso.codigo }} - {{ matricula.curso.nombre }}</span>
+                        <span class="text-sm text-green-500">(Aprobado)</span>
+                    </div>
+                    {% empty %}
+                    <p>No hay cursos aprobados en este momento.</p>
                     {% endfor %}
                 </div>
             </div>

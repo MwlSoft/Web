@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.contrib.auth.models import User
 class Carrera(models.Model):
     codigo = models.CharField(max_length=3, primary_key=True)
     nombre = models.CharField(max_length=50)
@@ -93,9 +93,10 @@ class Matricula(models.Model):
         unique_together = [['estudiante', 'curso']]
     
     def calcular_nota_final(self):
-        if all([self.N1, self.N2, self.N3, self.examen_final]):
+        if all([self.N1 is not None, self.N2 is not None, self.N3 is not None, self.examen_final is not None]):
             return (self.N1 * 0.2) + (self.N2 * 0.2) + (self.N3 * 0.2) + (self.examen_final * 0.4)
         return None
+
 
     def __str__(self):
         txt = "{0} Matriculad{1} en el curso {2} / Fecha: {3}"
@@ -133,3 +134,12 @@ class EstadoCurso(models.Model):
 
     def __str__(self):
         return f"{self.estudiante.nombreCompleto()} - {self.curso.nombre} ({self.get_estado_display()})"
+    
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.sender} to {self.receiver} at {self.timestamp}'

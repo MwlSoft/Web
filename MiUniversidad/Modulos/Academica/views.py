@@ -3,11 +3,12 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
-from .models import Estudiante, Carrera, Matricula, Curso, Pensum, EstadoCurso,  Profesor
+from .models import Estudiante, Carrera, Matricula, Curso, Pensum, EstadoCurso,  Profesor, ChatMessage
 from datetime import datetime
 from django.db import IntegrityError
 from .forms import PensumForm
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 def home(request):
     return render(request, 'home.html')
@@ -85,20 +86,20 @@ def dashboard(request):
     cursos_aprobados = EstadoCurso.objects.filter(
         estudiante=estudiante,
         estado='AP'
-    ).values_list('curso__codigo', flat=True)
+    ).select_related('curso')
 
     # Obtener todos los cursos disponibles para la carrera del estudiante
     cursos_disponibles = Curso.objects.filter(
         pensum__carrera=estudiante.carrera
     ).exclude(
         Q(codigo__in=cursos_matriculados) | 
-        Q(codigo__in=cursos_aprobados)
+        Q(codigo__in=cursos_aprobados.values_list('curso__codigo', flat=True))
     ).distinct()
 
     # Filtrar cursos disponibles basado en prerequisitos
     cursos_disponibles = [
         curso for curso in cursos_disponibles
-        if all(pre.codigo in cursos_aprobados for pre in curso.prerequisitos.all())
+        if all(pre.codigo in cursos_aprobados.values_list('curso__codigo', flat=True) for pre in curso.prerequisitos.all())
     ]
 
     pensum = Pensum.objects.filter(carrera=estudiante.carrera).select_related('curso')
@@ -111,13 +112,13 @@ def dashboard(request):
         estado = 'SC'  # Sin Cursar
         if item.curso.codigo in cursos_matriculados:
             estado = 'EC'  # En Curso
-        elif item.curso.codigo in cursos_aprobados:
+        elif item.curso.codigo in cursos_aprobados.values_list('curso__codigo', flat=True):
             estado = 'AP'  # Aprobado
         
         prerequisitos_info = [
             {
                 'curso': pre,
-                'cumplido': pre.codigo in cursos_aprobados
+                'cumplido': pre.codigo in cursos_aprobados.values_list('curso__codigo', flat=True)
             } for pre in item.curso.prerequisitos.all()
         ]
         
@@ -138,6 +139,7 @@ def dashboard(request):
         'pensum_data': pensum_data,
         'cursos_matriculados': matriculas_actuales,
         'cursos_disponibles': cursos_disponibles,
+        'cursos_aprobados': cursos_aprobados,  # Agregar cursos aprobados al contexto
     }
 
     return render(request, 'dashboard.html', context)
@@ -299,7 +301,7 @@ def asignar_calificaciones(request, matricula_id):
             matricula.save()
             
             # Verificar aprobación
-            if all([matricula.N1, matricula.N2, matricula.N3, matricula.examen_final]):
+            if all([matricula.N1 is not None, matricula.N2 is not None, matricula.N3 is not None, matricula.examen_final is not None]):
                 nota_final = matricula.calcular_nota_final()
                 if nota_final >= 3.0:
                     EstadoCurso.objects.update_or_create(
@@ -308,6 +310,13 @@ def asignar_calificaciones(request, matricula_id):
                         defaults={'estado': 'AP'}
                     )
                     messages.success(request, 'Estudiante ha aprobado el curso')
+                else:
+                    EstadoCurso.objects.update_or_create(
+                        estudiante=matricula.estudiante,
+                        curso=matricula.curso,
+                        defaults={'estado': 'RP'}  # Reprobado
+                    )
+                    messages.success(request, 'Estudiante ha reprobado el curso')
                 
             messages.success(request, 'Calificaciones actualizadas exitosamente')
             return redirect('lista_estudiantes_curso', curso_codigo=matricula.curso.codigo)
@@ -319,3 +328,36 @@ def asignar_calificaciones(request, matricula_id):
         'matricula': matricula,
     }
     return render(request, 'asignar_calificaciones.html', context)
+
+
+def chat_view(request, receiver_id):
+    # Intentar encontrar el estudiante por cc
+    try:
+        receiver = Estudiante.objects.get(cc=receiver_id)
+    except Estudiante.DoesNotExist:
+        # Si no se encuentra, intentar encontrar el profesor por codigo
+        receiver = get_object_or_404(Profesor, codigo=receiver_id)
+
+    # Aquí deberías cargar los mensajes del chat, por ejemplo:
+    messages = ChatMessage.objects.filter(
+        (Q(sender=request.user) & Q(receiver=receiver)) |
+        (Q(sender=receiver) & Q(receiver=request.user))
+    ).order_by('timestamp')
+
+    context = {
+        'receiver': receiver,
+        'messages': messages,
+    }
+
+    return render(request, 'chat.html', context)
+
+
+
+def crear_chat(request):
+    estudiantes = Estudiante.objects.all()  # Asegúrate de que esto devuelva objetos válidos
+    profesores = Profesor.objects.all()      # Asegúrate de que esto devuelva objetos válidos
+
+    return render(request, 'crear_chat.html', {
+        'estudiantes': estudiantes,
+        'profesores': profesores,
+    })
