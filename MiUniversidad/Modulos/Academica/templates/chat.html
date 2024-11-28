@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat con {{ receiver.nombreCompleto }}</title> <!-- Cambié a nombreCompleto para mostrar el nombre -->
+    <title>Chat con {{ receiver.nombreCompleto }}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <script>
-        // Usar 'cc' o 'codigo' dependiendo del tipo de receptor
         const roomName = "{{ receiver.cc|default:receiver.codigo }}"; // Se utiliza cc para estudiantes y codigo para profesores
 
         const chatSocket = new WebSocket(
@@ -18,6 +17,8 @@
             const messageElement = document.createElement('div');
             messageElement.innerHTML = `<strong>${data.sender}:</strong> ${data.message}`;
             document.getElementById('chat-messages').appendChild(messageElement);
+            // Desplazar la vista hacia abajo
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
         };
 
         chatSocket.onclose = function(e) {
@@ -40,27 +41,4 @@
     <nav class="bg-white shadow-lg">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between">
-                <div class="flex items-center py-4">
-                    <span class="font-semibold text-gray-500 text-lg">Chat con {{ receiver.nombreCompleto }}</span>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{% url 'logout' %}" class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded">Cerrar Sesión</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mx-auto mt-10">
-        <div id="chat-messages" class="border border-gray-300 p-4 h-64 overflow-y-scroll mb-4">
-            {% for message in messages %}
-                <div><strong>{{ message.sender.nombreCompleto }}:</strong> {{ message.content }}</div> <!-- Cambié a nombreCompleto -->
-            {% endfor %}
-        </div>
-
-        <form onsubmit="sendMessage(event)">
-            <input id="chat-message-input" type="text" class="border border-gray-300 p-2 w-full" placeholder="Escribe tu mensaje..." required>
-            <button type="submit" class="mt-2 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded">Enviar</button>
-        </form>
-    </div>
-</body>
-</html>
+                <div

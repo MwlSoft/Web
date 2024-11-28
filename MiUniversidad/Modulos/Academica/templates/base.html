@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi Universidad{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Estilos personalizados */
+        .hover\:shadow-lg:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-blue-600 p-4">
@@ -28,7 +34,7 @@
 
     <footer class="bg-blue-600 text-white p-4 mt-8">
         <div class="container mx-auto text-center">
-            <p>&copy; 2024 Mi Universidad. Todos los derechos reservados. ;p</p>
+            <p>&copy; 2024 Mi Universidad. Todos los derechos reservados.</p>
         </div>
     </footer>
 </body>

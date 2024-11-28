@@ -12,10 +12,9 @@
             });
             document.getElementById(tabName).style.display = 'block';
 
-            // Cambiar el título según la pestaña seleccionada
             document.getElementById('mainTitle').innerText = title;
 
-            // Actualizar la clase activa en la barra lateral
+
             var sidebarItems = document.querySelectorAll('.sidebar-item');
             sidebarItems.forEach(function (item) {
                 item.classList.remove('bg-blue-500', 'text-white');
@@ -84,6 +83,11 @@
                     <li class="mb-2">
                         <a href="{% url 'crear_chat' %}" class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
                             Crear un nuevo chat
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'enviar_asesoria' %}" class="sidebar-item block p-2 rounded text-gray-600 hover:bg-gray-100">
+                            Enviar Asesoría
                         </a>
                     </li>
                 </ul>

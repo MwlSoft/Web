@@ -89,7 +89,7 @@ class Matricula(models.Model):
     N3 = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(20)])
     examen_final = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(20)])
     class Meta:
-        # Añadir restricción única para la combinación estudiante-curso
+
         unique_together = [['estudiante', 'curso']]
     
     def calcular_nota_final(self):
@@ -143,3 +143,13 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f'{self.sender} to {self.receiver} at {self.timestamp}'
+    
+class AsesoriaMensaje(models.Model):
+    estudiante = models.ForeignKey('Estudiante', on_delete=models.CASCADE)
+    profesor = models.ForeignKey('Profesor', on_delete=models.CASCADE)
+    mensaje = models.TextField()
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+    leido = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Mensaje de {self.estudiante} a {self.profesor} - {self.fecha_envio}'

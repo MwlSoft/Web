@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import agregar_pensum, listar_pensum, chat_view
+from .views import enviar_asesoria, buzón_asesoria
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -21,4 +22,7 @@ urlpatterns = [
 
     path('chat/<int:receiver_id>/', views.chat_view, name='chat'),
     path('crear_chat/', views.crear_chat, name='crear_chat'),
+
+    path('enviar-asesoria/', enviar_asesoria, name='enviar_asesoria'),
+    path('buzon-asesoria/', buzón_asesoria, name='buzon_asesoria'),
 ]   

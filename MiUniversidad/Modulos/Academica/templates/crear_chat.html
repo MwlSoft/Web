@@ -22,27 +22,33 @@
 
     <div class="container mx-auto mt-10">
         <h1 class="text-2xl font-bold mb-6">Selecciona un usuario para chatear</h1>
-        <h2 class="text-xl font-semibold mb-4">Estudiantes</h2>
-        <ul class="space-y-4">
-            {% for estudiante in estudiantes %}
-                <li>
-                    <a href="{% url 'chat' estudiante.cc %}" class="text-blue-500 hover:text-blue-600">{{ estudiante.nombreCompleto }}</a>
-                </li>
-            {% empty %}
-                <li>No hay estudiantes disponibles para chatear.</li>
-            {% endfor %}
-        </ul>
 
-        <h2 class="text-xl font-semibold mb-4">Profesores</h2>
-        <ul class="space-y-4">
-            {% for profesor in profesores %}
-                <li>
-                    <a href="{% url 'chat' profesor.codigo %}" class="text-blue-500 hover:text-blue-600">{{ profesor.nombreCompleto }}</a>
-                </li>
-            {% empty %}
-                <li>No hay profesores disponibles para chatear.</li>
-            {% endfor %}
-        </ul>
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Estudiantes</h2>
+            <ul class="space-y-4">
+                {% for estudiante in estudiantes %}
+                    <li>
+                        <a href="{% url 'chat' estudiante.cc %}" class="text-blue-500 hover:text-blue-600">{{ estudiante.nombreCompleto }}</a>
+                    </li>
+                {% empty %}
+                    <li>No hay estudiantes disponibles para chatear.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold mb-4">Profesores</h2>
+            <ul class="space-y-4">
+                {% for profesor in profesores %}
+                    <li>
+                        <a href="{% url 'chat' profesor.codigo %}" class="text-blue-500 hover:text-blue-600">{{ profesor.nombreCompleto }}</a>
+                    </li>
+                {% empty %}
+                    <li>No hay profesores disponibles para chatear.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
         <a href="{% url 'dashboard' %}" class="mt-4 inline-block text-blue-500 hover:text-blue-600">Volver al Dashboard</a>
     </div>
 </body>
